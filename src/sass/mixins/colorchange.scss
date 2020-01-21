@@ -1,0 +1,66 @@
+@function getPercent($index) {
+      @return nth($percentages, $i);
+    }
+
+@mixin colorchange($type, $startingcolor, $name) {
+    -webkit-animation: #{$name} 5s; /* Chrome and Safari */
+    animation: #{$name} 5s;
+    animation-iteration-count: infinite;
+
+    @if $type == peace {
+      @keyframes #{$name}
+        {
+
+        0%   {background: $startingcolor;}
+        12%  {background: $peace-pink;}
+        24%  {background: $peace-orange;}
+        36%  {background: $peace-green;}
+        48%  {background: $peace-aqua;}
+        60%  {background: $peace-brown;}
+        72%  {background: $peace-yellow;}
+        84%  {background: $peace-blue;}
+        96%  {background: $peace-purple;}
+        100%  {background: $startingcolor;}
+        }
+        /* Safari and Chrome - necessary duplicate */
+        @-webkit-keyframes #{$name}
+        {
+          0%   {background: $startingcolor;}
+        12%  {background: $peace-pink;}
+        24%  {background: $peace-orange;}
+        36%  {background: $peace-green;}
+        48%  {background: $peace-aqua;}
+        60%  {background: $peace-brown;}
+        72%  {background: $peace-yellow;}
+        84%  {background: $peace-blue;}
+        96%  {background: $peace-purple;}
+        100%  {background: $startingcolor;}
+        }
+    }
+
+    @if $type == bliss {
+      @keyframes #{$name}
+        {
+        0%   {background: $startingcolor;}
+        15%  {background: $bliss-green;}
+        30%  {background: $bliss-aqua;}
+        45%  {background: $bliss-blue;}
+        60%  {background: $bliss-red;}
+        75%  {background: $bliss-purple;}
+        90%  {background: $bliss-magenta;}
+        100% {background: $startingcolor;}
+        }
+        /* Safari and Chrome - necessary duplicate */
+        @-webkit-keyframes #{$name}
+        {
+        0%   {background: $startingcolor;}
+        15%  {background: $bliss-green;}
+        30%  {background: $bliss-aqua;}
+        45%  {background: $bliss-blue;}
+        60%  {background: $bliss-red;}
+        75%  {background: $bliss-purple;}
+        90%  {background: $bliss-magenta;}
+        100% {background: $startingcolor;}
+        }
+    }
+}

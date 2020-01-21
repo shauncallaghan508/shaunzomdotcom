@@ -1,0 +1,35 @@
+@font-face {
+  font-family: 'Good Type Regular';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/assets/fonts/TheGoodType-Regular.eot');
+  src: url('/assets/fonts/TheGoodType-Regular.woff2') format('woff2'),
+      url('/assets/fonts/TheGoodType-Regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Good Type Bold';
+  font-style: normal;
+  font-weight: 800;
+  src: url('/assets/fonts/TheGoodType-Bold.eot');
+  src: url('/assets/fonts/TheGoodType-Bold.woff2') format('woff2'),
+      url('/assets/fonts/TheGoodType-Bold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Good Type Italic';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/assets/fonts/TheGoodType-Italic.eot');
+  src: url('/assets/fonts/TheGoodType-Italic.woff2') format('woff2'),
+      url('/assets/fonts/TheGoodType-Italic.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Good Type Bold Italic';
+  font-style: normal;
+  font-weight: 800;
+  src: url('/assets/fonts/TheGoodType-BoldItalic.eot');
+  src: url('/assets/fonts/TheGoodType-BoldItalic.woff2') format('woff2'),
+      url('/assets/fonts/TheGoodType-BoldItalic.woff') format('woff');
+}

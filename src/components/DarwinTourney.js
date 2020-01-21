@@ -13,7 +13,6 @@ class DarwinTourney extends React.Component {
             <main>
                 <h1>Darwin Tourney</h1>
                 <div className="current-tourneys">
-
                 </div>
                 <ul className="Gamers">
                     {Object.keys(this.state.gamers).map(key => (

@@ -2,18 +2,12 @@ import React from 'react';
 import base from "../base";
 import TournamentInfoCard from "./TournamentInfoCard";
 
-class MainApp extends React.Component {
+class DarwinApp extends React.Component {
   state = {
     tournaments: {}
   };
 
   componentDidMount() {
-    // const { params } = this.props.match;
-    // //reinstate local storage
-    // const localStorageRef = localStorage.getItem(params.tournaments);
-    // if (localStorageRef) {
-    //   this.setState({ order: JSON.parse(localStorageRef) });
-    // }
     this.ref = base.syncState(`tournament`, {
       context: this,
       state: 'tournaments'
@@ -45,4 +39,4 @@ class MainApp extends React.Component {
   }
 }
 
-export default MainApp;
+export default DarwinApp;

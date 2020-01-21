@@ -1,101 +1,38 @@
-import React from "react";
-import Header from "./Header";
-import Inventory from "./Inventory";
-import Order from "./Order";
-import sampleFishes from '../sample-fishes';
-import Fish from "./Fish";
+import React from 'react';
 import base from "../base";
+import TournamentInfoCard from "./TournamentInfoCard";
 
-class App extends React.Component {
-    state = {
-        fishes: {},
-        order: {}
-    };
+class MainApp extends React.Component {
+  state = {
+    tournaments: {}
+  };
 
-    componentDidMount() {
-        const { params } = this.props.match;
-        //reinstate local storage
-        const localStorageRef = localStorage.getItem(params.storeId);
-        if(localStorageRef) {
-            this.setState({ order: JSON.parse(localStorageRef)});
-        }
-        this.ref = base.syncState(`${params.storeId}/fishes`, {
-            context: this,
-            state: 'fishes'
-        });
-    }
+  componentDidMount() {
+    // const { params } = this.props.match;
+    // //reinstate local storage
+    // const localStorageRef = localStorage.getItem(params.tournaments);
+    // if (localStorageRef) {
+    //   this.setState({ order: JSON.parse(localStorageRef) });
+    // }
+    this.ref = base.syncState(`tournament`, {
+      context: this,
+      state: 'tournaments'
+    });
+  }
 
-    componentDidUpdate() {
-        const { params } = this.props.match;
-        localStorage.setItem(`${params.storeId}`, JSON.stringify(this.state.order));
-    }
+  goToTourneyMaker = event => {
+    event.preventDefault();
+    this.props.history.push(`/darwin/tourneymaker`);
+  };
 
-    componentWillUnmount() {
-        base.removeBinding(this.ref);
-    }
-
-    updateFish = (key, updatedFish) => {
-        const fishes = { ...this.state.fishes };
-        fishes[key] = updatedFish;
-        this.setState({ fishes });
-    }
-
-    deleteFish = (key) => {
-        const fishes = { ...this.state.fishes };
-        fishes[key] = null;
-        this.setState({ fishes });
-    }
-
-    addFish = fish => {
-        // creates copy of state
-        const fishes = { ...this.state.fishes };
-        fishes[`fish${Date.now()}`] = fish;
-        this.setState({ fishes });
-    };
-
-    loadSampleFishes = () => {
-        this.setState({ fishes: sampleFishes });
-    };
-
-    addToOrder = (key) => {
-        const order = { ...this.state.order };
-        order[key] = order[key] + 1 || 1;
-        this.setState({ order });
-    };
-
-    removeFromOrder = (key) => {
-        const order = { ...this.state.order };
-        delete order[key]
-        this.setState({ order });
-    }
-
-    render() {
-        return (
-            <div className="catch-of-the-day">
-                <div className="menu">
-                    <Header tagline="Fresh Seafood Market" />
-                    <ul className="fishes">
-                        { Object.keys(this.state.fishes).map(key => (
-                            <Fish
-                                key={key}
-                                index={key}
-                                details={this.state.fishes[key]}
-                                addToOrder={this.addToOrder}
-                            />
-                        ))}
-                    </ul>
-                </div>
-                <Order fishes={this.state.fishes} order={this.state.order} removeFromOrder={this.removeFromOrder} />
-                <Inventory
-                    addFish={this.addFish}
-                    loadSampleFishes={this.loadSampleFishes}
-                    fishes={this.state.fishes}
-                    updateFish={ this.updateFish }
-                    deleteFish={ this.deleteFish }
-                    />
-            </div>
-        )
-    }
+  render() {
+    return (
+      <div className="mainpage">
+        <h1>ShaunZom.com</h1>
+        <a href="/darwin">Darwin Project</a>
+      </div>
+    );
+  }
 }
 
-export default App;
+export default MainApp;
