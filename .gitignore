@@ -1,5 +1,5 @@
 # we don't want to commit dependencies
-node_modules
+node_modules/
 
 # this project uses npm
 yarn.lock
