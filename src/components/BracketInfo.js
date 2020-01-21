@@ -27,7 +27,7 @@ class BracketInfo extends React.Component {
                     <div>
                         Bracket Name: <input name="name" type="text" placeholder="Bracket Name" value={name} onChange={this.handleChange}/>
                         Director: <input name="director" type="text" placeholder="Director Name" value={director} onChange={this.handleChange}/>
-                        Location: <select name="location" value={location} onChange={this.handleChange} >
+                        Location: <select name="location" value={location} onChange={this.handleChange}>
                                 <option value="">Select Location</option>
                                 <option value="NA East">NA East</option>
                                 <option value="NA West">NA West</option>
