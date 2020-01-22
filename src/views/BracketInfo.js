@@ -47,21 +47,52 @@ class BracketInfo extends React.Component {
         //Remove Gamer from bracket, add back to available
     }
 
+    getGamerListingsMarkup () {
+        if (!this.state.showAvailablePlayers) return
+
+        return (
+            <div className="tournament__available-players">
+            {Object.keys(this.props.availableGamers).map(key => (
+                <GamerListing
+                    key={key}
+                    index={key}
+                    gamerName={this.props.availableGamers[key].name}
+                    action="adding"
+                    addGamer={this.addGamer}
+                    gamerDetails={this.props.availableGamers[key]}
+                />
+            ))}
+        </div>
+        )
+    }
+
+    getPlayerListMarkup (action) {
+        const removeGamer = this.removeGamer
+        const firstTenGamers = this.state.gamers.slice(0, 10)
+        return firstTenGamers.map((gamer, index) => {
+            return (
+                <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>
+                        <GamerListing 
+                            index={index} 
+                            gamerName={ gamer } 
+                            action={action} 
+                            removeGamer={removeGamer}
+                        />
+                    </td>
+                </tr>
+            )
+        })
+    }
+
     render() {
         const { director, name, gamers, location, tempid } = this.props.details;
-        const showPlayers = (action) => {
-            let players = []
-            for (let i = 0; i < 10; i++) {
-                players.push(
-                    <tr key={i}>
-                        <td>{i + 1}</td>
-                        <td><GamerListing index={i} gamerName={ this.state.gamers[i] } action={action} removeGamer={this.removeGamer}/></td>
-                    </tr>
-                )
-            }
 
-            return players
-        };
+        // i don't know what the difference is between these two groups of gamer listings
+        const editingPlayers = this.getPlayerListMarkup('editing')
+        const otherPlayers = this.getPlayerListMarkup()
+        const gamerListings = this.getGamerListingsMarkup()
 
         return (
             <div className="bracket">
@@ -78,28 +109,12 @@ class BracketInfo extends React.Component {
                         </select></div>
                         <div>Players:
                             <table>
-                                <tbody>
-                                    {
-                                        showPlayers('editing')
-                                    }
-                                </tbody>
+                                <tbody>{ editingPlayers }</tbody>
                             </table>
                         </div>
 
-                    { this.state.showAvailablePlayers &&
-                        <div className="tournament__available-players">
-                            {Object.keys(this.props.availableGamers).map(key => (
-                                <GamerListing
-                                    key={key}
-                                    index={key}
-                                    gamerName={this.props.availableGamers[key].name}
-                                    action="adding"
-                                    addGamer={this.addGamer}
-                                    gamerDetails={this.props.availableGamers[key]}
-                                />
-                            ))}
-                        </div>
-                    }
+                    { gamerListings }
+
                     { !this.state.showAvailablePlayers &&
                         <div><button onClick={this.toggleShowAvailablePlayers}>Add Players</button></div>
                     }
@@ -113,11 +128,7 @@ class BracketInfo extends React.Component {
                         <div>Location: {location}</div>
                         <div>Players:
                             <table>
-                                <tbody>
-                                    {
-                                        showPlayers()
-                                    }
-                                </tbody>
+                                <tbody>{ otherPlayers }</tbody>
                             </table>
                         </div>
                         <button onClick={this.toggleEdit}>Edit</button>
