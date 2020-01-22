@@ -1,5 +1,5 @@
 import React from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PropTypes from 'prop-types'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 class GamerListing extends React.Component {
@@ -11,6 +11,10 @@ class GamerListing extends React.Component {
             </div>
         )
     }
+}
+
+GamerListing.propTypes = {
+    gamerDetails: PropTypes.object.isRequired
 }
 
 export default GamerListing;
