@@ -12,7 +12,8 @@ class TournamentPage extends React.Component {
         tournament: {},
         brackets: {},
         editing: false,
-        availableGamers: {}
+        availableGamers: {},
+        signedUpGamers: gamers
     };
 
     componentDidMount() {
@@ -84,18 +85,27 @@ class TournamentPage extends React.Component {
 
     deleteBracket = (key) => {
         const brackets = { ...this.state.brackets };
+        console.log(brackets[key].gamers)
+        {  Object.keys(brackets[key].gamers).map(gamer => (
+            this.addGamerToAvailable(gamer)
+        ))}
         brackets[key] = null;
         this.setState({ brackets });
-
-        //TODO
-        //Put gamers back into player pool if any are in deleted bracket
     };
 
     removeGamerFromAvailable = (key) => {
-        console.log('removing ', key);
+        console.log('removing ', this.state.availableGamers.key);
         const availableGamers = {...this.state.availableGamers};
         delete availableGamers[key];
         console.log('availablegamers ', availableGamers);
+        this.setState({ availableGamers });
+    }
+
+    addGamerToAvailable = (key) => {
+        const availableGamers = {
+            ...this.state.availableGamers,
+            [key]: this.state.signedUpGamers[key]
+        };
         this.setState({ availableGamers });
     }
 
@@ -163,6 +173,8 @@ class TournamentPage extends React.Component {
                                 deleteBracket={this.deleteBracket}
                                 availableGamers={this.state.availableGamers}
                                 removeGamerFromAvailable={this.removeGamerFromAvailable}
+                                signedUpGamers={this.state.signedUpGamers}
+                                addGamerToAvailable={this.addGamerToAvailable}
                             />
                         ))}
                         <div className="bracket" onClick={this.addBracket}>

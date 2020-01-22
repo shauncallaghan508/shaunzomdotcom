@@ -5,8 +5,7 @@ class BracketInfo extends React.Component {
     state = {
         editing: false,
         showAvailablePlayers: false,
-        gamers: this.props.details.gamers || [],
-        details: this.props.details
+        gamers: this.props.details.gamers || {}
     };
 
     handleChange = (event) => {
@@ -34,55 +33,68 @@ class BracketInfo extends React.Component {
         }));
     }
 
-    addGamer = (key) => {
-        const gamers = this.state.gamers.concat(key);
-        this.setState({ gamers });
-        const details = {...this.state.details};
-        details.gamers = gamers;
+    addGamerToBracket = (key) => {
+        let updatedGamers;
+        updatedGamers = {
+            ...this.state.gamers,
+            [key]: this.props.signedUpGamers[key]
+        }
+        this.setState({ gamers: updatedGamers });
+        const details = { ...this.props.details };
+        details.gamers = updatedGamers;
         this.props.updateBracket(this.props.index, details);
         this.props.removeGamerFromAvailable(key);
     }
 
-    removeGamer = (key) => {
-        //Remove Gamer from bracket, add back to available
+    removeGamerFromBracket = (key) => {
+        console.log('removing ', this.state.gamers[key]);
+        const gamers = { ...this.state.gamers };
+        delete gamers[key];
+        this.setState({ gamers });
+        this.props.addGamerToAvailable(key);
     }
 
-    getGamerListingsMarkup () {
+    getGamerListingsMarkup (action) {
         if (!this.state.showAvailablePlayers) return
 
         return (
             <div className="tournament__available-players">
-            {this.props.availableGamers.map((value, key) => (
-                <GamerListing
-                    key={key}
-                    gamerDetails={value}
-                />
-            ))}
-        </div>
+                {Object.keys(this.props.availableGamers).map((value, key) => (
+                    <GamerListing
+                        key={key}
+                        index={value}
+                        gamerDetails={this.props.availableGamers[value]}
+                        action={action}
+                        addGamerToBracket={this.addGamerToBracket}
+                    />
+                ))}
+            </div>
         )
     }
 
     getPlayerListMarkup (action) {
-        const firstTenGamers = this.state.gamers.slice(0, 10)
-        return firstTenGamers.map((gamer, index) => {
-            return (
+        return Object.keys(this.state.gamers).map((value, index) => (
                 <tr key={index}>
                     <td>{index + 1}</td>
                     <td>
-                        <GamerListing gamerDetails={gamer} />
+                    <GamerListing
+                        key={value}
+                        index={value}
+                        gamerDetails={this.state.gamers[value]}
+                        action={action}
+                        removeGamerFromBracket={this.removeGamerFromBracket}/>
                     </td>
                 </tr>
-            )
-        })
+        ))
     }
 
     render() {
         const { director, name, location } = this.props.details;
 
         // i don't know what the difference is between these two groups of gamer listings
-        const editingPlayers = this.getPlayerListMarkup('editing')
-        const otherPlayers = this.getPlayerListMarkup()
-        const gamerListings = this.getGamerListingsMarkup()
+        const editingPlayers = this.getPlayerListMarkup('editing');
+        const addingPlayers = this.getGamerListingsMarkup('adding');
+        const otherPlayers = this.getPlayerListMarkup();
 
         return (
             <div className="bracket">
@@ -98,12 +110,12 @@ class BracketInfo extends React.Component {
                                 <option value="EU">EU</option>
                         </select></div>
                         <div>Players:
-                            <table>
+                            <table className="table">
                                 <tbody>{ editingPlayers }</tbody>
                             </table>
                         </div>
 
-                    { gamerListings }
+                    { addingPlayers }
 
                     { !this.state.showAvailablePlayers &&
                         <div><button onClick={this.toggleShowAvailablePlayers}>Add Players</button></div>
