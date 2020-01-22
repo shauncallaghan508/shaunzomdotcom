@@ -1,16 +1,18 @@
 import React from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import PropTypes from 'prop-types'
 
 class GamerListing extends React.Component {
     render() {
         return (
             <div className="gamer-listing">
-                //THIS SHIT DONT WORK
                 {this.props.gamerDetails.name}
             </div>
         )
     }
+}
+
+GamerListing.propTypes = {
+    gamerDetails: PropTypes.object.isRequired
 }
 
 export default GamerListing;
