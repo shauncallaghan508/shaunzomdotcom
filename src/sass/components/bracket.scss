@@ -1,0 +1,22 @@
+.bracket {
+  @include make-col-ready;
+  @include make-col(4);
+  margin-bottom: $spacing--base;
+}
+
+.bracket__info {
+  padding: $med;
+  border: 1px solid $darkblue;
+}
+
+.add-bracket {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(24, 163, 24);
+
+  &:hover {
+    cursor: pointer;
+    border-color: rgb(24, 163, 24);
+  }
+}

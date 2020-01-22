@@ -1,6 +1,6 @@
 import React from "react";
 import darwinGamers from '../darwin-gamers';
-import GamerFullInfoCard from './GamerFullInfoCard';
+import GamerFullInfoCard from '../views/GamerFullInfoCard';
 import base from "../base";
 
 class DarwinTourney extends React.Component {

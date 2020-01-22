@@ -1,0 +1,132 @@
+import React from "react";
+import GamerListing from "./GamerListing";
+
+class BracketInfo extends React.Component {
+    state = {
+        editing: false,
+        showAvailablePlayers: false,
+        gamers: this.props.details.gamers || [],
+        details: this.props.details
+    };
+
+    handleChange = (event) => {
+        const updatedBracket = {
+            ...this.props.details,
+            [event.currentTarget.name]: event.currentTarget.value
+        };
+        this.props.updateBracket(this.props.index, updatedBracket);
+    };
+
+    toggleEdit = () => {
+        this.setState(editing => ({
+            editing: !this.state.editing
+        }));
+        if (this.state.showAvailablePlayers) {
+            this.setState(showAvailablePlayers => ({
+                showAvailablePlayers: !this.state.showAvailablePlayers
+            }));
+        }
+    }
+
+    toggleShowAvailablePlayers = () => {
+        this.setState(showAvailablePlayers => ({
+            showAvailablePlayers: !this.state.showAvailablePlayers
+        }));
+    }
+
+    addGamer = (key) => {
+        const gamers = this.state.gamers.concat(key);
+        this.setState({ gamers });
+        const details = {...this.state.details};
+        details.gamers = gamers;
+        this.props.updateBracket(this.props.index, details);
+        this.props.removeGamerFromAvailable(key);
+    }
+
+    removeGamer = (key) => {
+        //Remove Gamer from bracket, add back to available
+    }
+
+    render() {
+        const { director, name, gamers, location, tempid } = this.props.details;
+        const showPlayers = (action) => {
+            let players = []
+            for (let i = 0; i < 10; i++) {
+                players.push(
+                    <tr key={i}>
+                        <td>{i + 1}</td>
+                        <td><GamerListing index={i} gamerName={ this.state.gamers[i] } action={action} removeGamer={this.removeGamer}/></td>
+                    </tr>
+                )
+            }
+
+            return players
+        };
+
+        return (
+            <div className="bracket">
+                { this.state.editing &&
+                    <div className="bracket__info">
+                        <div><button onClick={() => this.props.deleteBracket(this.props.index)}>Delete Bracket</button></div>
+                        <div>Bracket Name: <input name="name" type="text" placeholder="Bracket Name" value={name} onChange={this.handleChange}/></div>
+                        <div>Director: <input name="director" type="text" placeholder="Director Name" value={director} onChange={this.handleChange}/></div>
+                        <div>Location: <select name="location" value={location} onChange={this.handleChange}>
+                                <option value="">Select Location</option>
+                                <option value="NA East">NA East</option>
+                                <option value="NA West">NA West</option>
+                                <option value="EU">EU</option>
+                        </select></div>
+                        <div>Players:
+                            <table>
+                                <tbody>
+                                    {
+                                        showPlayers('editing')
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                    { this.state.showAvailablePlayers &&
+                        <div className="tournament__available-players">
+                            {Object.keys(this.props.availableGamers).map(key => (
+                                <GamerListing
+                                    key={key}
+                                    index={key}
+                                    gamerName={this.props.availableGamers[key].name}
+                                    action="adding"
+                                    addGamer={this.addGamer}
+                                    gamerDetails={this.props.availableGamers[key]}
+                                />
+                            ))}
+                        </div>
+                    }
+                    { !this.state.showAvailablePlayers &&
+                        <div><button onClick={this.toggleShowAvailablePlayers}>Add Players</button></div>
+                    }
+                        <div><button onClick={this.toggleEdit}>Save</button></div>
+                    </div>
+                }
+                { !this.state.editing &&
+                    <div className="bracket__info">
+                        <div>Bracket Name: {name}</div>
+                        <div>Director: {director}</div>
+                        <div>Location: {location}</div>
+                        <div>Players:
+                            <table>
+                                <tbody>
+                                    {
+                                        showPlayers()
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <button onClick={this.toggleEdit}>Edit</button>
+                    </div>
+                }
+            </div>
+
+        );
+    }
+}
+
+export default BracketInfo;

@@ -1,0 +1,35 @@
+.tournament__header {
+  padding: $med;
+  text-align: center;
+}
+
+.create-tourney {
+  max-width: 800px;
+  margin: $spacing--large auto;
+}
+
+.points-table {
+  font-size: 80%;
+  thead {
+    font-weight: 700;
+    color: $white;
+    background-color: $darkblue;
+  }
+
+  td {
+    font-weight: 700;
+    width: 33.3%;
+  }
+
+  tbody > tr {
+    td {
+      color: $darkblue;
+      background-color: $lightblue;
+
+      &:nth-child(2) {
+        color: $white;
+        background-color: $purple;
+      }
+    }
+  }
+}

@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import App from './App';
-import DarwinApp from './DarwinApp';
+import App from '../pages/App';
+import DarwinApp from '../pages/DarwinApp';
 import DarwinTourney from './DarwinTourney';
-import TourneyMaker from './TourneyMaker';
-import TournamentPage from './TournamentPage';
-import NotFound from './NotFound';
+import TourneyMaker from '../pages/TourneyMaker';
+import TournamentPage from '../pages/TournamentPage';
+import NotFound from '../pages/NotFound';
 
 const Router = () => (
     <BrowserRouter>

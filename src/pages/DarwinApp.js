@@ -1,6 +1,7 @@
 import React from 'react';
 import base from "../base";
-import TournamentInfoCard from "./TournamentInfoCard";
+import Header from "../views/Header";
+import TournamentInfoCard from "../views/TournamentInfoCard";
 
 class DarwinApp extends React.Component {
   state = {
@@ -22,7 +23,7 @@ class DarwinApp extends React.Component {
   render() {
     return (
       <div className="mainpage">
-        <h1>ShaunZom.com</h1>
+        <Header />
         <button onClick={this.goToTourneyMaker}>Create Darwin Tournament</button>
         <h2>Upcoming Tournaments</h2>
         <ul className="tournament-listings">

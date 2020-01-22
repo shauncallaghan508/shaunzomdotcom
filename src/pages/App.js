@@ -1,6 +1,6 @@
 import React from 'react';
 import base from "../base";
-import TournamentInfoCard from "./TournamentInfoCard";
+import Header from "../views/Header";
 
 class MainApp extends React.Component {
   state = {
@@ -28,8 +28,7 @@ class MainApp extends React.Component {
   render() {
     return (
       <div className="mainpage">
-        <h1>ShaunZom.com</h1>
-        <a href="/darwin">Darwin Project</a>
+        <Header />
       </div>
     );
   }

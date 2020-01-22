@@ -39,67 +39,39 @@ $container-max-widths: (
 // Spacing
 //////////////
 $xsmall: .625rem; // 10px
-$small: .75rem; // 12px;
+$spacing--small: .75rem; // 12px;
 $medsmall: 1.5625rem; // 25px
 $med: 2.1875rem; // 35px
 $medlarge: 3.125rem; // 50px
-$largesmall:  4.0625rem; // 65px
-$large: 5rem; // 80px
-$xlarge: 6.25rem; //100px
-$xxlarge: 7.8125rem; // 125px
-$xxxlarge: 10rem; // 160px
+$spacing--base: $base-line-height * 1rem;
+$spacing--medium: $spacing--base * 1.5;
+$spacing--large: $spacing--base * 2;
 
 //////////////
 // Colors
 //////////////
 $black: #000;
 $white: #fff;
+$grey: grey;
+$darkblue: #0d1749;
+$lightblue: #00aff5;
+$purple: #67319a;
+$orange: #ff8f00;
+$magenta: #ad0064;
+$pink: #ff008e;
 
-// Peaceful
-$peace-pink: #fee8e7;
-$peace-orange: #feecd7;
-$peace-green: #c3fed0;
-$peace-aqua: #d9f3f2;
-$peace-brown: #f6efe4;
-$peace-yellow: #ffffb2;
-$peace-blue: #ddf0fe;
-$peace-purple: #f6e9f3;
 
-// Bliss
-$bliss-green: #2cce97;
-$bliss-aqua: #30d6ce;
-$bliss-blue: #265cea;
-$bliss-red: #fc4148;
-$bliss-purple: #a245fc;
-$bliss-magenta: #e053fa;
+//////////////
+// Forms
+//////////////
+$form-input-bg: $white;
+$form-input-padding: $spacing--small;
+$form-input-font-size: $base-font-size;
+$form-input-line-height: $base-line-height;
+$form-input-height: ($form-input-line-height + ($spacing--small * 2)) !default;
 
-// Bliss color with opacity
 
-$bliss-green-25: rgba(44, 207, 152, .25);
-$bliss-aqua-25: rgba(48, 214, 206, .25);
-$bliss-blue-25: rgba(38, 92, 235,.25);
-$bliss-red-25: rgba(252, 66, 73,.25);
-$bliss-purple-25: rgba(162, 69, 252,.25);
-$bliss-magenta-25: rgba(224, 82, 250,.25);
-
-// BG Gradients
-$gradient--aquaorange: linear-gradient($peace-aqua, $peace-orange);
-$gradient--aquayellow: linear-gradient($peace-aqua, $peace-yellow);
-$gradient--aquapurple: linear-gradient($peace-aqua, $peace-purple);
-$gradient--blueyellow: linear-gradient($peace-blue, $peace-yellow);
-$gradient--blueorange: linear-gradient($peace-blue, $peace-orange);
-$gradient--bluepurple: linear-gradient($peace-blue, $peace-purple);
-$gradient--blueaqua: linear-gradient($peace-blue, $peace-aqua);
-$gradient--yellowblue: linear-gradient($peace-yellow, $peace-blue);
-$gradient--yelloworange: linear-gradient($peace-yellow, $peace-orange);
-$gradient--yellowpurple: linear-gradient($peace-yellow, $peace-purple);
-$gradient--orangeaqua: linear-gradient($peace-orange, $peace-aqua);
-$gradient--orangeblue: linear-gradient($peace-orange, $peace-blue);
-$gradient--orangepurple: linear-gradient($peace-orange, $peace-purple);
-$gradient--orangeyellow: linear-gradient($peace-orange, $peace-yellow);
-$gradient--pinkblue: linear-gradient($peace-pink, $peace-blue);
-$gradient--brownblue: linear-gradient($peace-brown, $peace-blue);
-$gradient--purpleyellow: linear-gradient($peace-purple, $peace-yellow);
-$gradient--purpleorange: linear-gradient($peace-purple, $peace-orange);
-$gradient--purpleblue: linear-gradient($peace-purple, $peace-blue);
-$gradient--purpleaqua: linear-gradient($peace-purple, $peace-aqua);
+$form-input-color: $darkblue;
+$form-input-border: 1px solid $darkblue;
+$form-input-border-radius: 2px;
+$form-input-bg-disabled: $grey;

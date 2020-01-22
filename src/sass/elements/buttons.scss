@@ -1,46 +1,16 @@
-.btn--sm {
-  @include button(sm, $bliss-red);
-}
-
-.btn--md {
-  @include button(md, $bliss-blue);
-}
-
-.btn--lg {
-  @include button(lg, $bliss-purple);
-}
-
-.btn--blue {
-  @include button(md, $bliss-blue);
-}
-
-.btn--red {
-  @include button(md, $bliss-red);
-}
-
-.btn--green {
-  @include button(md, $bliss-green);
-}
-
-.btn--purple {
-  @include button(md, $bliss-purple);
-}
-
-button {
-  @include input($white, $bliss-blue, 0);
-  padding: $medsmall 18px;
+.btn {
+  background-color: $lightblue;
+  border: 1px solid $lightblue;
+  border-radius: 2px;
   font-size: $base-font-size;
-  background: $bliss-blue;
-  border-color: $bliss-blue;
+  color: $white;
+  display: inline-block;
+  padding: $spacing--small $spacing--base;
+  transition: all .2s ease-in-out;
 
-  @include media-breakpoint-up(md) {
-    padding: $medsmall;
-    font-size: 20px;
-  }
-
-  &:hover, &:visited {
-    color: $bliss-blue;
-    cursor: pointer;
-    background: transparent;
+  &:hover {
+      background-color: $white;
+      color: $lightblue;
+      cursor: pointer;
   }
 }

@@ -2,5 +2,6 @@
 @import 'mixins/all';
 @import 'base/all';
 @import 'layout/grid';
-
-@import '../css/style'; // all your stuff to make it look pretty is currently here
+@import 'elements/all';
+@import 'components/all';
+@import 'pages/all';

@@ -1,0 +1,13 @@
+.footer--main {
+  padding: $spacing--small 0;
+  color: $lightblue;
+  background-color: $darkblue;
+  border-top: 5px solid $purple;
+
+  &__wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+}

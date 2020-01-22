@@ -1,0 +1,51 @@
+label {
+  display: inline-block;
+  max-width: 100%; // Force IE8 to wrap long content (see https://github.com/twbs/bootstrap/issues/13141)
+  margin-bottom: 5px;
+  font-weight: 700;
+  font-size: 80%;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  height: $form-input-height;
+  margin-bottom: $spacing--base;
+  padding: $form-input-padding;
+  font-size: $form-input-font-size;
+  line-height: $form-input-line-height;
+  color: $form-input-color;
+  background-color: $form-input-bg;
+  background-image: none;
+  border: $form-input-border;
+  border-radius: $form-input-border-radius;
+
+  // Unstyle the caret on `<select>`s in IE10+.
+  &::-ms-expand {
+    background-color: transparent;
+    border: 0;
+  }
+
+  // Disabled and read-only inputs
+  //
+  // HTML5 says that controls under a fieldset > legend:first-child won't be
+  // disabled if the fieldset is disabled. Due to implementation difficulty, we
+  // don't honor that edge case; we style them as disabled anyway.
+  &[disabled],
+  &[readonly],
+  fieldset[disabled] & {
+    background-color: $form-input-bg-disabled;
+    opacity: 1; // iOS fix for unreadable disabled content; see https://github.com/twbs/bootstrap/issues/11655
+  }
+
+  &[disabled],
+  fieldset[disabled] & {
+    cursor: disabled;
+  }
+
+  // [converter] extracted textarea& to textarea.form-control
+}
+
+textarea.form-control {
+  height: auto;
+}

@@ -12,7 +12,7 @@
   }
 
   @if $size == md {
-    padding: $small;
+    padding: $spacing--small;
     line-height: 14px;
   }
 
@@ -50,7 +50,7 @@
   }
 
   @if $size == md {
-    padding: $small;
+    padding: $spacing--small;
     line-height: 14px;
   }
 
