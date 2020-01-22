@@ -52,14 +52,10 @@ class BracketInfo extends React.Component {
 
         return (
             <div className="tournament__available-players">
-            {Object.keys(this.props.availableGamers).map(key => (
+            {this.props.availableGamers.map((value, key) => (
                 <GamerListing
                     key={key}
-                    index={key}
-                    gamerName={this.props.availableGamers[key].name}
-                    action="adding"
-                    addGamer={this.addGamer}
-                    gamerDetails={this.props.availableGamers[key]}
+                    gamerDetails={value}
                 />
             ))}
         </div>
@@ -67,19 +63,13 @@ class BracketInfo extends React.Component {
     }
 
     getPlayerListMarkup (action) {
-        const removeGamer = this.removeGamer
         const firstTenGamers = this.state.gamers.slice(0, 10)
         return firstTenGamers.map((gamer, index) => {
             return (
                 <tr key={index}>
                     <td>{index + 1}</td>
                     <td>
-                        <GamerListing 
-                            index={index} 
-                            gamerName={ gamer } 
-                            action={action} 
-                            removeGamer={removeGamer}
-                        />
+                        <GamerListing gamerDetails={gamer} />
                     </td>
                 </tr>
             )
@@ -87,7 +77,7 @@ class BracketInfo extends React.Component {
     }
 
     render() {
-        const { director, name, gamers, location, tempid } = this.props.details;
+        const { director, name, location } = this.props.details;
 
         // i don't know what the difference is between these two groups of gamer listings
         const editingPlayers = this.getPlayerListMarkup('editing')
