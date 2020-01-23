@@ -33,27 +33,6 @@ class BracketInfo extends React.Component {
         }));
     }
 
-    addGamerToBracket = (key) => {
-        let updatedGamers;
-        updatedGamers = {
-            ...this.state.gamers,
-            [key]: this.props.signedUpGamers[key]
-        }
-        this.setState({ gamers: updatedGamers });
-        const details = { ...this.props.details };
-        details.gamers = updatedGamers;
-        this.props.updateBracket(this.props.index, details);
-        this.props.removeGamerFromAvailable(key);
-    }
-
-    removeGamerFromBracket = (key) => {
-        console.log('removing ', this.state.gamers[key]);
-        const gamers = { ...this.state.gamers };
-        delete gamers[key];
-        this.setState({ gamers });
-        this.props.addGamerToAvailable(key);
-    }
-
     getGamerListingsMarkup (action) {
         if (!this.state.showAvailablePlayers) return
 
@@ -62,10 +41,11 @@ class BracketInfo extends React.Component {
                 {Object.keys(this.props.availableGamers).map((value, key) => (
                     <GamerListing
                         key={key}
-                        index={value}
+                        gamerId={value}
                         gamerDetails={this.props.availableGamers[value]}
                         action={action}
-                        addGamerToBracket={this.addGamerToBracket}
+                        addGamerToBracket={this.props.addGamerToBracket}
+                        bracketId={this.props.index}
                     />
                 ))}
             </div>
@@ -73,19 +53,22 @@ class BracketInfo extends React.Component {
     }
 
     getPlayerListMarkup (action) {
-        return Object.keys(this.state.gamers).map((value, index) => (
-                <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>
-                    <GamerListing
-                        key={value}
-                        index={value}
-                        gamerDetails={this.state.gamers[value]}
-                        action={action}
-                        removeGamerFromBracket={this.removeGamerFromBracket}/>
-                    </td>
-                </tr>
-        ))
+        if (this.props.gamersInBracket) {
+            return Object.keys(this.props.gamersInBracket).map((value, index) => (
+                    <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>
+                        <GamerListing
+                            key={value}
+                            bracketId={this.props.index}
+                            gamerId={value}
+                            gamerDetails={this.props.gamersInBracket[value]}
+                            action={action}
+                            removeGamerFromBracket={this.props.removeGamerFromBracket}/>
+                        </td>
+                    </tr>
+            ))
+        }
     }
 
     render() {
@@ -129,7 +112,7 @@ class BracketInfo extends React.Component {
                         <div>Director: {director}</div>
                         <div>Location: {location}</div>
                         <div>Players:
-                            <table>
+                            <table className="table">
                                 <tbody>{ otherPlayers }</tbody>
                             </table>
                         </div>

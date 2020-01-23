@@ -78,36 +78,66 @@ class TournamentPage extends React.Component {
     }
 
     updateBracket = (key, updatedBracket) => {
+        console.log('updating bracket', key);
         const brackets = { ...this.state.brackets };
         brackets[key] = updatedBracket;
-        this.setState({ brackets });
+        console.log('new brackets ', brackets);
+        this.setState({ brackets }, console.log('state has been updated'));
+        console.log('new brackets state ', this.state.brackets);
     };
 
     deleteBracket = (key) => {
-        const brackets = { ...this.state.brackets };
-        console.log(brackets[key].gamers)
-        {  Object.keys(brackets[key].gamers).map(gamer => (
-            this.addGamerToAvailable(gamer)
-        ))}
+        const brackets = { ...this.state.brackets }
+        console.log('gamers in bracket ', brackets[key].gamers)
+        // {Object.keys(brackets[key].gamers).map(gamerId => (this.addGamerToAvailable(gamerId)))}
         brackets[key] = null;
-        this.setState({ brackets });
+        this.setState({ brackets }, console.log('state has been updated'));
     };
 
+    addGamerToBracket = (bracketId, gamerId) => {
+        let updatedBracket = { ...this.state.brackets[bracketId]};
+        const updatedGamers = {
+                ...updatedBracket.gamers,
+                [gamerId]: this.state.signedUpGamers[gamerId]
+
+        }
+        updatedBracket.gamers = updatedGamers;
+        this.updateBracket(bracketId, updatedBracket);
+        this.removeGamerFromAvailable(gamerId);
+    }
+
+    removeGamerFromBracket = (bracketId, gamerId) => {
+        console.log('removing from bracket', gamerId);
+        console.log('brackedId ', bracketId);
+        let updatedBracket = { ...this.state.brackets[bracketId] };
+        const updatedGamers = {...updatedBracket.gamers}
+        delete updatedGamers[gamerId];
+        updatedBracket.gamers = updatedGamers;
+        console.log('updated gamers ', updatedGamers);
+        console.log('updated bracket', updatedBracket);
+        this.updateBracket(bracketId, updatedBracket);
+        this.addGamerToAvailable(gamerId);
+    }
+
     removeGamerFromAvailable = (key) => {
-        console.log('removing ', this.state.availableGamers.key);
+        console.log('removing from available', this.state.availableGamers[key])
         const availableGamers = {...this.state.availableGamers};
         delete availableGamers[key];
         console.log('availablegamers ', availableGamers);
         this.setState({ availableGamers });
     }
 
-    addGamerToAvailable = (key) => {
+    addGamerToAvailable = (gamerId) => {
+        console.log('adding back to available', gamerId);
         const availableGamers = {
             ...this.state.availableGamers,
-            [key]: this.state.signedUpGamers[key]
+            [gamerId]: this.state.signedUpGamers[gamerId]
         };
         this.setState({ availableGamers });
     }
+
+    //TODO
+    //DELETE TOURNAMNET
 
     render() {
         const { date, desc, directorRuleset, image, name, playerRuleset, prize, status, prelims } = this.state.tournament;
@@ -172,9 +202,11 @@ class TournamentPage extends React.Component {
                                 updateBracket={this.updateBracket}
                                 deleteBracket={this.deleteBracket}
                                 availableGamers={this.state.availableGamers}
-                                removeGamerFromAvailable={this.removeGamerFromAvailable}
                                 signedUpGamers={this.state.signedUpGamers}
+                                gamersInBracket={this.state.brackets[key].gamers}
                                 addGamerToAvailable={this.addGamerToAvailable}
+                                addGamerToBracket={this.addGamerToBracket}
+                                removeGamerFromBracket={this.removeGamerFromBracket}
                             />
                         ))}
                         <div className="bracket" onClick={this.addBracket}>

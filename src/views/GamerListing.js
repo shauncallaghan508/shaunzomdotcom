@@ -26,10 +26,10 @@ class GamerListing extends React.Component {
             <div className="gamer-listing">
                 <span>{this.props.gamerDetails.name}</span>
                 {this.props.action === "editing" &&
-                    <span onClick={() => this.props.removeGamerFromBracket(this.props.index)}>X</span>
+                    <span className="interact-btn remove" onClick={() => this.props.removeGamerFromBracket(this.props.bracketId, this.props.gamerId)}>X</span>
                 }
                 {this.props.action === "adding" &&
-                    <span onClick={() => this.props.addGamerToBracket(this.props.index)}>Add</span>
+                    <span className="interact-btn add" onClick={() => this.props.addGamerToBracket(this.props.bracketId, this.props.gamerId)}>Add</span>
                 }
             </div>
         )
