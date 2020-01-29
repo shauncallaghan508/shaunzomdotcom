@@ -1,5 +1,13 @@
 .gamer-listing {
   .interact-btn {
     float: right;
+
+    &.add {
+      color: green;
+    }
+
+    &.remove {
+      color: red;
+    }
   }
 }

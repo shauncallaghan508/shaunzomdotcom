@@ -33,3 +33,24 @@
     }
   }
 }
+
+
+.live-bracket__table {
+  tbody,
+  thead {
+    tr td {
+      padding: 5px;
+    }
+  }
+
+  tbody tr td {
+    &:nth-child(n+2) {
+      text-align: center;
+    }
+    input[type='text'] {
+      width: 20px;
+    }
+  }
+
+  margin-right: $spacing--base;
+}

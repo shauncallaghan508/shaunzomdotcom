@@ -5,7 +5,7 @@ class BracketInfo extends React.Component {
     state = {
         editing: false,
         showAvailablePlayers: false,
-        gamers: this.props.details.gamers || {}
+        gamers: this.props.details.gamers || {},
     };
 
     handleChange = (event) => {
@@ -46,6 +46,7 @@ class BracketInfo extends React.Component {
                         action={action}
                         addGamerToBracket={this.props.addGamerToBracket}
                         bracketId={this.props.index}
+                        bracketFull={this.props.gamersInBracketCount === 10}
                     />
                 ))}
             </div>
@@ -71,6 +72,12 @@ class BracketInfo extends React.Component {
         }
     }
 
+    showAddPlayersBtn () {
+        if (this.props.gamersInBracketCount !== 10) {
+            return (<div><button onClick={this.toggleShowAvailablePlayers}>Add Players</button></div>)
+        }
+    }
+
     render() {
         const { director, name, location } = this.props.details;
 
@@ -78,6 +85,7 @@ class BracketInfo extends React.Component {
         const editingPlayers = this.getPlayerListMarkup('editing');
         const addingPlayers = this.getGamerListingsMarkup('adding');
         const otherPlayers = this.getPlayerListMarkup();
+        const showAddPlayersBtn = this.showAddPlayersBtn();
 
         return (
             <div className="bracket">
@@ -100,8 +108,8 @@ class BracketInfo extends React.Component {
 
                     { addingPlayers }
 
-                    { !this.state.showAvailablePlayers &&
-                        <div><button onClick={this.toggleShowAvailablePlayers}>Add Players</button></div>
+                    {!this.state.showAvailablePlayers &&
+                        showAddPlayersBtn
                     }
                         <div><button onClick={this.toggleEdit}>Save</button></div>
                     </div>

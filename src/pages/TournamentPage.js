@@ -4,16 +4,17 @@ import Header from "../views/Header";
 import BracketInfo from "../views/BracketInfo";
 import PointsTable from "../views/PointsTable";
 import gamers from "../darwin-gamers";
+import LiveBracket from "../views/LiveBracket";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 class TournamentPage extends React.Component {
     state = {
         tournament: {},
-        brackets: {},
         editing: false,
         availableGamers: {},
-        signedUpGamers: gamers
+        signedUpGamers: gamers,
+        showDelete: false
     };
 
     componentDidMount() {
@@ -27,11 +28,38 @@ class TournamentPage extends React.Component {
             context: this,
             state: 'tournament'
         });
-        base.syncState(`tournament/${params.tourneyId}/brackets`, {
-            context: this,
-            state: 'brackets'
-        });
         this.setState({availableGamers: gamers});
+    }
+
+    handleChange = (event) => {
+        const updatedTourney = {
+            ...this.state.tournament,
+            [event.currentTarget.name]: event.currentTarget.value
+        };
+        this.updateTourney(this.props.index, updatedTourney);
+    };
+
+    showDeleteTournamentToggle = () => {
+        this.setState(() => ({
+            showDelete: !this.state.showDelete
+        }));
+    }
+
+    deleteTournament = () => {
+        const { params } = this.props.match;
+        base.remove(`tournament/${params.tourneyId}`);
+        this.props.history.push(`/darwin/`);
+    }
+
+    addBracket = async () => {
+        const bracket = {
+            name: "",
+            director: "",
+            gamers: {},
+            location: "",
+            tempid: Date.now()
+        }
+        this.createBracket(bracket);
     }
 
     createBracket = bracket => {
@@ -53,24 +81,16 @@ class TournamentPage extends React.Component {
         }));
     }
 
-    addBracket = async () => {
-        const bracket = {
-            name: "",
-            director: "",
-            gamers: {},
-            location: "",
-            tempid: Date.now()
+    startTournament = () => {
+        if (this.state.tournament.brackets) {
+            const tournament = {...this.state.tournament}
+            tournament.started = true
+            this.setState({ tournament });
+        } else {
+            alert("You don't have any brackets!");
+            return;
         }
-        this.createBracket(bracket);
     }
-
-    handleChange = (event) => {
-        const updatedTourney = {
-            ...this.state.tournament,
-            [event.currentTarget.name]: event.currentTarget.value
-        };
-        this.updateTourney(this.props.index, updatedTourney);
-    };
 
     updateTourney = (key, updatedTourney) => {
         const tournament = updatedTourney;
@@ -79,65 +99,112 @@ class TournamentPage extends React.Component {
 
     updateBracket = (key, updatedBracket) => {
         console.log('updating bracket', key);
-        const brackets = { ...this.state.brackets };
+        const tournament = {...this.state.tournament }
+        const brackets = tournament.brackets;
         brackets[key] = updatedBracket;
-        console.log('new brackets ', brackets);
-        this.setState({ brackets }, console.log('state has been updated'));
-        console.log('new brackets state ', this.state.brackets);
+        this.setState({ tournament }, () => {console.log('state has been updated')});
     };
 
     deleteBracket = (key) => {
-        const brackets = { ...this.state.brackets }
-        console.log('gamers in bracket ', brackets[key].gamers)
-        // {Object.keys(brackets[key].gamers).map(gamerId => (this.addGamerToAvailable(gamerId)))}
+        const tournament = { ...this.state.tournament }
+        const brackets = tournament.brackets;
+        const availableGamers = { ...this.state.availableGamers }
+        let gamersToAddBack = {};
+        if ( brackets[key].gamers ) {
+            {Object.keys(brackets[key].gamers).map(gamerId =>
+                availableGamers[gamerId] = this.state.signedUpGamers[gamerId]
+            )}
+        }
         brackets[key] = null;
-        this.setState({ brackets }, console.log('state has been updated'));
+        this.setState({ tournament, availableGamers });
     };
 
     addGamerToBracket = (bracketId, gamerId) => {
-        let updatedBracket = { ...this.state.brackets[bracketId]};
-        const updatedGamers = {
-                ...updatedBracket.gamers,
-                [gamerId]: this.state.signedUpGamers[gamerId]
-
+        const tournament = { ...this.state.tournament }
+        const bracketGamers = {
+            ...tournament.brackets[bracketId].gamers,
+            [gamerId]: this.state.signedUpGamers[gamerId]
         }
-        updatedBracket.gamers = updatedGamers;
-        this.updateBracket(bracketId, updatedBracket);
-        this.removeGamerFromAvailable(gamerId);
+        tournament.brackets[bracketId].gamers = bracketGamers;
+        this.setState({ tournament }, () => { this.removeGamerFromAvailable(gamerId) });
+
     }
 
     removeGamerFromBracket = (bracketId, gamerId) => {
-        console.log('removing from bracket', gamerId);
-        console.log('brackedId ', bracketId);
-        let updatedBracket = { ...this.state.brackets[bracketId] };
-        const updatedGamers = {...updatedBracket.gamers}
-        delete updatedGamers[gamerId];
-        updatedBracket.gamers = updatedGamers;
-        console.log('updated gamers ', updatedGamers);
-        console.log('updated bracket', updatedBracket);
-        this.updateBracket(bracketId, updatedBracket);
+        console.log('deleting', gamerId);
+        const updatedTournament = { ...this.state.tournament }
+        const bracketGamers = {...updatedTournament.brackets[bracketId].gamers}
+        bracketGamers[gamerId] = null;
+        updatedTournament.brackets[bracketId].gamers = bracketGamers;
+        console.log('updated tournament ', updatedTournament);
+        this.setState({ tournament: updatedTournament });
         this.addGamerToAvailable(gamerId);
     }
 
     removeGamerFromAvailable = (key) => {
-        console.log('removing from available', this.state.availableGamers[key])
         const availableGamers = {...this.state.availableGamers};
         delete availableGamers[key];
-        console.log('availablegamers ', availableGamers);
         this.setState({ availableGamers });
     }
 
     addGamerToAvailable = (gamerId) => {
-        console.log('adding back to available', gamerId);
+        console.log('adding back to available ', gamerId);
         const availableGamers = {
             ...this.state.availableGamers,
             [gamerId]: this.state.signedUpGamers[gamerId]
         };
-        this.setState({ availableGamers });
+        this.setState({ availableGamers }, () => {return});
     }
 
-    //TODO
-    //DELETE TOURNAMNET
+    addBracketRounds = () => {
+        const tournament = { ...this.state.tournament }
+        {
+            Object.keys(tournament.brackets).map(bracketIndex => {
+                let bracketData = tournament.brackets[bracketIndex];
+                bracketData.games = {};
+                let bracketGamers = bracketData.gamers;
+                let bracketGamerScores = {};
+
+                    // bracketData.games['game' + gameIndex] = {}
+                Object.keys(bracketGamers).map(gamerId => {
+                    bracketGamerScores[gamerId]=
+                        {
+                            placement: 0,
+                            kills: 0,
+                            firstblood: false,
+                            total: 0
+                        }
+                })
+                for (let gameIndex = 1; gameIndex <= tournament.prelims; gameIndex++) {
+                    bracketData.games['game' + gameIndex] = bracketGamerScores
+                }
+                bracketData.games['finals'] = bracketGamerScores
+            })
+        }
+        this.updateTourney(this.props.index, tournament);
+    }
+
+    updateBracketRoundScore = (bracketId, gamerId, gameRound, statName, statValue) => {
+        console.log('gamer: ', gamerId);
+        console.log('bracket: ', bracketId);
+        console.log('gameRound: ', gameRound);
+        console.log('statName: ', statName);
+        console.log('statValue: ', statValue);
+        const tournament = { ...this.state.tournament }
+        const test = {
+                [gameRound]: {
+                    [gamerId]: {[statName]: statValue}
+                }
+        }
+        const gameDetails = {
+            ...tournament.brackets[bracketId],
+            games: test
+        }
+
+        tournament.brackets[bracketId] = gameDetails;
+
+        this.updateTourney(this.props.index, tournament);
+    }
 
     render() {
         const { date, desc, directorRuleset, image, name, playerRuleset, prize, status, prelims } = this.state.tournament;
@@ -166,6 +233,14 @@ class TournamentPage extends React.Component {
                                     <textarea name="directorrulesset" value={directorRuleset} placeholder="Director Ruleset" onChange={this.handleChange}/>
                                     <input name="image" type="text" value={image} placeholder="Tournament Image" onChange={this.handleChange}/>
                                     <button onClick={this.toggleEdit}>Save</button>
+                                    <button onClick={this.showDeleteTournamentToggle}>Delete Tournament</button>
+                                    { this.state.showDelete &&
+                                        <div className="delete-prompt">
+                                            <p>Bruv, are you absolutely fucking sure you want to delete this tournament?!</p>
+                                            <button onClick={this.deleteTournament}>DELETE IT, YOU BITCH</button>
+                                            <button onClick={this.showDeleteTournamentToggle}>Nah, I'm big dumb</button>
+                                        </div>
+                                    }
                                 </div>
                             }
                             { !this.state.editing &&
@@ -187,37 +262,62 @@ class TournamentPage extends React.Component {
                                     </div>
                                 </div>
                             }
+                            { !this.state.tournament.started &&
+                                <button className="btn btn--success" onClick={this.startTournament}>Start Tournament</button>
+                            }
                         </section>
                         <section className="tournament__pointstable col-md-4">
                             <PointsTable />
                         </section>
                     </section>
-                    <section>
-                    <ul className="brackets row">
-                        {Object.keys(this.state.brackets).map(key => (
-                            <BracketInfo
-                                key={key}
-                                index={key}
-                                details={this.state.brackets[key]}
-                                updateBracket={this.updateBracket}
-                                deleteBracket={this.deleteBracket}
-                                availableGamers={this.state.availableGamers}
-                                signedUpGamers={this.state.signedUpGamers}
-                                gamersInBracket={this.state.brackets[key].gamers}
-                                addGamerToAvailable={this.addGamerToAvailable}
-                                addGamerToBracket={this.addGamerToBracket}
-                                removeGamerFromBracket={this.removeGamerFromBracket}
-                            />
-                        ))}
-                        <div className="bracket" onClick={this.addBracket}>
-                            <div className="bracket__info add-bracket">
-                                <FontAwesomeIcon icon={faPlus} size='10x'/>
-                            </div>
-                        </div>
+                    { !this.state.tournament.started &&
+                        <section className="brackets-section">
+                            <ul className="brackets row">
+                                {this.state.tournament.brackets &&
+                                    Object.keys(this.state.tournament.brackets).map(key => (
+                                        <BracketInfo
+                                            key={key}
+                                            index={key}
+                                            details={this.state.tournament.brackets[key]}
+                                            updateBracket={this.updateBracket}
+                                            deleteBracket={this.deleteBracket}
+                                            availableGamers={this.state.availableGamers}
+                                            signedUpGamers={this.state.signedUpGamers}
+                                            gamersInBracket={this.state.tournament.brackets[key].gamers}
+                                            addGamerToAvailable={this.addGamerToAvailable}
+                                            addGamerToBracket={this.addGamerToBracket}
+                                            removeGamerFromBracket={this.removeGamerFromBracket}
+                                            gamersInBracketCount={Object.keys(this.state.tournament.brackets[key].gamers || 0).length}
+                                        />
+                                    ))
+                                }
+                                <div className="bracket" onClick={this.addBracket}>
+                                    <div className="bracket__info add-bracket">
+                                        <FontAwesomeIcon icon={faPlus} size='10x'/>
+                                    </div>
+                                </div>
+                            </ul>
+                        </section>
+                    }
+                    { this.state.tournament.started &&
 
-                    </ul>
+                        <section className="brackets--live">
+                        <button onClick={this.addBracketRounds}>Add Brackets to DB</button>
 
-                </section>
+                        {
+                            Object.keys(this.state.tournament.brackets).map(key => (
+                                <LiveBracket
+                                    key={key}
+                                    index={key}
+                                    gameCount={parseInt(this.state.tournament.prelims)}
+                                    details={this.state.tournament.brackets[key]}
+                                    gamersInBracket={this.state.tournament.brackets[key].gamers}
+                                    updateBracketRoundScore={this.updateBracketRoundScore}
+                                />
+                            ))
+                        }
+                        </section>
+                    }
                 </div>
             </main>
         );
