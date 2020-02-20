@@ -2,7 +2,10 @@ import React from "react";
 import GamerListing from "../views/GamerListing";
 
 class LiveBracketRow extends React.Component {
-
+    state = {
+        positionPoints: [0, 100, 80, 60, 40, 30, 25, 20, 15, 10, 5],
+        killPoints: [0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150]
+    };
 
     handleChange = (event) => {
         this.props.updateBracketRoundScore(
@@ -11,8 +14,10 @@ class LiveBracketRow extends React.Component {
             this.props.bracketGameNumber,
             event.currentTarget.name,
             event.currentTarget.value);
-    };
+    }
 
+    // When first blood checkbox is checked - update
+    // TODO: disable all other FB checkboxes in bracket when one is checked
     handleFirstBlood = (event) => {
         this.props.updateBracketRoundScore(
             this.props.bracketId,
@@ -20,6 +25,19 @@ class LiveBracketRow extends React.Component {
             this.props.bracketGameNumber,
             'firstblood',
             event.currentTarget.checked);
+    }
+
+    //update total points for selected bracket
+    //TODO: save total score to sttate and database
+    totalScore = () => {
+        const totalPoints = this.state.positionPoints[this.props.bracketScore.placement] + this.state.killPoints[this.props.bracketScore.kills];
+        // this.props.updateBracketRoundScore(
+        //     this.props.bracketId,
+        //     this.props.gamerId,
+        //     this.props.bracketGameNumber,
+        //     'total',
+        //     totalPoints);
+        return totalPoints;
     }
 
     render() {
@@ -41,7 +59,7 @@ class LiveBracketRow extends React.Component {
                     <input type="checkbox" name="firstblood" checked={this.props.bracketScore.firstblood} onChange={this.handleFirstBlood}></input>
                 </td>
                 <td className="live-bracket__total">
-
+                    { this.totalScore() }
                 </td>
             </tr>
         )

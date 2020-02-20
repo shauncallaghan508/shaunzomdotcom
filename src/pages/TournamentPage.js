@@ -31,6 +31,7 @@ class TournamentPage extends React.Component {
         this.setState({availableGamers: gamers});
     }
 
+    // handle changes when editing tournament
     handleChange = (event) => {
         const updatedTourney = {
             ...this.state.tournament,
@@ -39,18 +40,21 @@ class TournamentPage extends React.Component {
         this.updateTourney(this.props.index, updatedTourney);
     };
 
+    // show prompt for 'are you sure you want to delete?'
     showDeleteTournamentToggle = () => {
         this.setState(() => ({
             showDelete: !this.state.showDelete
         }));
     }
 
+    // delete tournament from db
     deleteTournament = () => {
         const { params } = this.props.match;
         base.remove(`tournament/${params.tourneyId}`);
         this.props.history.push(`/darwin/`);
     }
 
+    //setup new bracket to send to be created in db
     addBracket = async () => {
         const bracket = {
             name: "",
@@ -62,6 +66,7 @@ class TournamentPage extends React.Component {
         this.createBracket(bracket);
     }
 
+    //creates new bracket in db
     createBracket = bracket => {
         const { params } = this.props.match;
         return new Promise(resolve => {
@@ -81,10 +86,14 @@ class TournamentPage extends React.Component {
         }));
     }
 
+    //set tournament started to true if brackets are built
+    //add bracket rounds to database for easier storing points later
+    // TODO: check if brackets are full, not just created.  Show warning if not full.
     startTournament = () => {
         if (this.state.tournament.brackets) {
             const tournament = {...this.state.tournament}
             tournament.started = true
+            this.addBracketRounds();
             this.setState({ tournament });
         } else {
             alert("You don't have any brackets!");
@@ -92,6 +101,7 @@ class TournamentPage extends React.Component {
         }
     }
 
+    // update tournament obj
     updateTourney = (key, updatedTourney) => {
         const tournament = updatedTourney;
         this.setState({ tournament });
@@ -156,6 +166,9 @@ class TournamentPage extends React.Component {
         this.setState({ availableGamers }, () => {return});
     }
 
+    // when a new tournament is started, this creates the bracket rounds and scores set to
+    // 0 so it's easier to update on change
+
     addBracketRounds = () => {
         const tournament = { ...this.state.tournament }
         {
@@ -191,17 +204,22 @@ class TournamentPage extends React.Component {
         console.log('statName: ', statName);
         console.log('statValue: ', statValue);
         const tournament = { ...this.state.tournament }
-        const test = {
+        const updatedStat = {
                 [gameRound]: {
                     [gamerId]: {[statName]: statValue}
                 }
         }
+
         const gameDetails = {
             ...tournament.brackets[bracketId],
-            games: test
+            games: updatedStat
         }
 
+        console.log(tournament.brackets[bracketId]);
+
         tournament.brackets[bracketId] = gameDetails;
+
+        console.log(tournament);
 
         this.updateTourney(this.props.index, tournament);
     }
@@ -302,7 +320,6 @@ class TournamentPage extends React.Component {
                     { this.state.tournament.started &&
 
                         <section className="brackets--live">
-                        <button onClick={this.addBracketRounds}>Add Brackets to DB</button>
 
                         {
                             Object.keys(this.state.tournament.brackets).map(key => (

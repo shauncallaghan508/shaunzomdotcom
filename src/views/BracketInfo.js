@@ -81,7 +81,6 @@ class BracketInfo extends React.Component {
     render() {
         const { director, name, location } = this.props.details;
 
-        // i don't know what the difference is between these two groups of gamer listings
         const editingPlayers = this.getPlayerListMarkup('editing');
         const addingPlayers = this.getGamerListingsMarkup('adding');
         const otherPlayers = this.getPlayerListMarkup();

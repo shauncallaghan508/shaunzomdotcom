@@ -28,6 +28,7 @@ class LiveBracket extends React.Component {
         index: PropTypes.string
     };
 
+    // builds out brackets for each prelim round
     createBracket = () => {
         let data = [];
 
@@ -65,6 +66,18 @@ class LiveBracket extends React.Component {
         return data
     }
 
+    // calculate final total kills
+    killTotal = (gamerId) => {
+        let game;
+        let killCount = 0;
+        for (let gameIndex = 1; gameIndex <= this.props.gameCount; gameIndex++) {
+            game = this.props.details.games['game' + gameIndex];
+            killCount += parseInt(game[gamerId].kills);
+        }
+
+        return killCount;
+    }
+
     render() {
         return (
             <section className="tournament__bracket">
@@ -97,7 +110,7 @@ class LiveBracket extends React.Component {
                                         />
                                     </td>
                                     <td className="live-bracket__input">
-
+                                        { this.killTotal(value) }
                                     </td>
                                     <td className="live-bracket__input">
 
