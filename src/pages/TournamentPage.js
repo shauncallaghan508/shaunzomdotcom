@@ -102,8 +102,7 @@ class TournamentPage extends React.Component {
     }
 
     // update tournament obj
-    updateTourney = (key, updatedTourney) => {
-        const tournament = updatedTourney;
+    updateTourney = (key, tournament) => {
         this.setState({ tournament });
     }
 
@@ -219,7 +218,7 @@ class TournamentPage extends React.Component {
 
         tournament.brackets[bracketId] = gameDetails;
 
-        console.log(tournament);
+        console.log('tournament ', tournament);
 
         this.updateTourney(this.props.index, tournament);
     }
